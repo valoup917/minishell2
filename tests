@@ -1,0 +1,538 @@
+[01]
+NAME="Path 1"
+sETUP="PATH='/usr/bin:/bin' ; touch file$$"
+CLEAN="rm -f file$$"
+TESTS=
+  echo 'ls -la /bin .'
+[01-END]
+
+[02]
+NAME="Path 2"
+SETUP="PATH='/bin' ; touch file$$"
+CLEAN="rm -f file$$"
+TESTS=
+  echo 'ls -la /bin .'
+[02-END]
+
+[03]
+NAME="Just a pwd"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'pwd'
+[03-END]
+
+[04]
+NAME=";"
+SETUP="mkdir bin ; cp /bin/ls bin/cat"
+CLEAN="rm -Rf bin"
+TESTS=
+  echo 'pwd ; ls -l'
+  echo 'cd ..'
+  echo 'bin/cat'
+  sleep 0.5
+  echo 'pwd'
+[04-END]
+
+[05]
+NAME="Check exit"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'exit'
+[05-END]
+
+[06]
+NAME="PATH modified"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo 'setenv PATH'
+  echo 'coucou'
+[06-END]
+
+[07]
+NAME="setenv and unsetenv"
+SETUP="/usr/bin/env > .lstenv ; while read varenv ; do unset $varenv ; done < <(/bin/cat .lstenv | /usr/bin/cut -f1 -d=) ; export PATH=/bin:/usr/bin ; export _=ls ; export LS_COLORS=RED ; export MYBG=1 ; export LVL=42 ; export NOTE=0"
+CLEAN="while read varenv ; do export "$varenv" 2>/dev/null ; done  < <(/bin/cat .lstenv) ; /bin/rm -f .lstenv"
+TESTS=
+  echo 'unsetenv HOSTTYPE VENDOR OSTYPE MACHTYPE SHLVL PWD LOGNAME USER GROUP HOST REMOTEHOST'
+  echo 'unsetenv _'
+  echo 'unsetenv LS_COLORS'
+  echo 'unsetenv NOTE'
+  echo 'setenv toto'
+  echo 'setenv tata coucou'
+  echo 'env'
+  echo '/bin/env'
+  echo 'setenv titi abcd'
+  echo 'unsetenv tata'
+  echo 'env'
+[07-END]
+
+[08]
+NAME="cd"
+SETUP=""
+CLEAN="rm -Rf plopplop"
+TESTS=
+  echo "mkdir plopplop"
+  echo "cd plopplop"
+  echo "pwd"
+  echo -e "cd -\necho KEY\npwd\ncd /\nls"
+  echo "cd -"
+  echo "ls"
+[08-END]
+
+[09]
+NAME="cd and error messages"
+SETUP="mkdir testdircd ; chmod 000 testdircd"
+CLEAN="chmod 755 testdircd ; rmdir testdircd"
+TESTS=
+  echo "cd testdircd"
+[09-END]
+
+[10]
+NAME="space and tab"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo -e ""
+  echo -e "ls"
+  echo -e "ls -l"
+  echo -e "ls     -l"
+  echo -e "     ls     -l"
+  echo -e "ls -l     "
+  echo -e "    ls     -l     -a    "
+  echo -e "ls\t"
+  echo -e "\tls"
+  echo -e "\tls\t-l"
+  echo -e "\t\t    ls\t     \t-l    \t\t  \t -a    \t\t"
+[10-END]
+
+[11]
+NAME=";"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo -e "    \t  ls  -l;echo toto  ;  ls\t;\techo plop"
+[11-END]
+
+[12]
+NAME=">"
+SETUP=""
+CLEAN="rm fic"
+TESTS=
+  echo "ls /dev > fic"
+  echo "echo toto"
+  echo "cat fic"
+[12-END]
+
+[13]
+NAME=">>"
+SETUP=""
+CLEAN="rm fic"
+TESTS=
+  echo "ls /dev > fic"
+  echo "echo toto"
+  echo "echo plop >> fic"
+  echo "ls / >> fic"
+  echo "echo titi"
+  echo "cat fic"
+[13-END]
+
+[14]
+NAME=">"
+SETUP=""
+CLEAN="rm myls"
+TESTS=
+  echo "cat /bin/ls > myls"
+  echo "chmod 755 myls"
+  echo "./myls"
+[14-END]
+
+[15]
+NAME=">>"
+SETUP="echo coucou > fic"
+CLEAN="rm fic"
+TESTS=
+  echo "cat fic >> fic"
+  echo "cat fic"
+[15-END]
+
+[16]
+NAME="cd-"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd ..'
+  echo 'cd -'
+  echo 'ls -l'
+  echo 'cd ..'
+  echo 'ls'
+[16-END]
+
+[17]
+NAME="Nothing"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo ''
+[17-END]
+
+[18]
+NAME="Exec two command"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'ls /etc'
+  echo 'cat /etc/resolv.conf'
+[18-END]
+
+[19]
+NAME="Testing with /usr/bin PATH"
+SETUP="export TERM=xterm ; PATH='/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+[19-END]
+
+[20]
+NAME="Testing with /bin PATH"
+SETUP="export TERM=xterm ; PATH='/bin'"
+CLEAN=""
+TESTS=
+  echo 'pwd'
+[20-END]
+
+[21]
+NAME="run commands"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cat /etc/resolv.conf'
+  sleep 0.5
+  echo 'ls -l /etc'
+  sleep 0.5
+  echo 'pwd'
+[21-END]
+
+[22]
+NAME="setenv and unsetenv"
+SETUP="/usr/bin/env > .lstenv ; while read varenv ; do unset $varenv ; done < <(/bin/cat .lstenv | /usr/bin/cut -f1 -d=) ; export PATH=/bin:/usr/bin ; export _=ls ; export LS_COLORS=RID ; export MYBG=4 ; export LVL=4 ; export NOTE=2"
+CLEAN="while read varenv ; do export "$varenv" 2>/dev/null ; done  < <(/bin/cat .lstenv) ; /bin/rm -f .lstenv"
+TESTS=
+  echo 'unsetenv HOSTTYPE'
+  echo 'unsetenv VENDOR'
+  echo 'unsetenv OSTYPE'
+  echo 'unsetenv MACHTYPE'
+  echo 'unsetenv SHLVL'
+  echo 'unsetenv PWD'
+  echo 'unsetenv LOGNAME'
+  echo 'unsetenv USER'
+  echo 'unsetenv GROUP'
+  echo 'unsetenv HOST'
+  echo 'unsetenv REMOTEHOST'
+  echo 'unsetenv _'
+  echo 'unsetenv LS_COLORS'
+  echo 'unsetenv NOTE'
+  echo 'setenv titi'
+  echo 'setenv tata coucou'
+  echo 'env'
+  echo '/usr/bin/env'
+  echo 'setenv var1 val1'
+  echo 'setenv var2 val2'
+[22-END]
+
+[23]
+NAME="builtin cd"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd ..'
+  echo 'ls -l'
+  echo 'cd /usr'
+  echo 'ls -l'
+[23-END]
+
+[24]
+NAME="many tab and space"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo -e "\t\t    ls\t     \t-l    \t\t  \t -a /usr   \t\t"
+[24-END]
+
+[25]
+NAME="Launch DivZero program with core dump"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "./my_divzero"
+[25-END]
+
+[26]
+NAME="Launch SegFault program without core dump"
+SETUP="ulimit -c 0 ; export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "./my_segfault"
+[26-END]
+
+[27]
+NAME="Testing simple pipe"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls -l /etc | grep sh"
+[27-END]
+
+[28]
+NAME="setenv and unsetenv 2"
+SETUP="/usr/bin/env > .lstenv ; while read varenv ; do unset $varenv ; done < <(/bin/cat .lstenv | /usr/bin/cut -f1 -d=) ; export PATH=/bin:/usr/bin ; export _=ls ; export LS_COLORS=RID ; export MYBG=4 ; export LVL=4 ; export NOTE=2"
+CLEAN="while read varenv ; do export "$varenv" 2>/dev/null ; done  < <(/bin/cat .lstenv) ; /bin/rm -f .lstenv"
+TESTS=
+  echo 'unsetenv HOSTTYPE'
+  echo 'unsetenv VENDOR'
+  echo 'unsetenv OSTYPE'
+  echo 'unsetenv MACHTYPE'
+  echo 'unsetenv SHLVL'
+  echo 'unsetenv PWD'
+  echo 'unsetenv LOGNAME'
+  echo 'unsetenv USER'
+  echo 'unsetenv GROUP'
+  echo 'unsetenv HOST'
+  echo 'unsetenv REMOTEHOST'
+  echo 'unsetenv _'
+  echo 'unsetenv LS_COLORS'
+  echo 'unsetenv NOTE'
+  echo 'setenv titi'
+  echo 'setenv titi toto'
+  echo 'env'
+  echo '/usr/bin/env'
+  echo 'setenv var1 val1'
+  echo 'setenv var2 val2'
+  echo 'setenv babiss shagata'
+  echo 'env'
+[28-END]
+
+[29]
+NAME="cd"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd ..'
+  echo 'ls -l'
+  echo 'cd /etc'
+  echo 'ls -l'
+[29-END]
+
+[30]
+NAME="cd"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd ..'
+  echo '/bin/pwd'
+  echo 'cd /usr/bin'
+  echo '/bin/pwd'
+[30-END]
+
+[31]
+NAME="cd"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo '/bin/pwd'
+  echo '/bin/pwd'
+[31-END]
+
+[32]
+NAME="cd-"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd'
+  echo 'cd /bin'
+  echo 'cd -'
+  echo 'ls -l'
+  echo 'cd ..'
+  echo 'ls'
+[32-END]
+
+[33]
+NAME="cd-"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd'
+  echo '/bin/pwd'
+  echo 'cd /usr'
+  echo '/bin/ls'
+  echo 'cd -'
+  echo '/bin/pwd'
+  echo '/bin/ls'
+[33-END]
+
+[34]
+NAME="cd-"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo 'cd'
+  echo '/bin/pwd'
+  echo 'cd /usr'
+  echo '/bin/ls'
+  echo 'cd -'
+  echo '/bin/pwd'
+  echo '/bin/ls'
+[34-END]
+
+[35]
+NAME="setenv simple 1"
+SETUP="/usr/bin/env > .lstenv ; while read varenv ; do unset $varenv ; done < <(/bin/cat .lstenv | /usr/bin/cut -f1 -d=) ; export PATH=/bin:/usr/bin ; export _=ls ; export LS_COLORS=RID ; export MYBG=4 ; export LVL=4 ; export NOTE=2"
+CLEAN="while read varenv ; do export "$varenv" 2>/dev/null ; done  < <(/bin/cat .lstenv) ; /bin/rm -f .lstenv"
+TESTS=
+  echo 'unsetenv HOSTTYPE'
+  echo 'unsetenv VENDOR'
+  echo 'unsetenv OSTYPE'
+  echo 'unsetenv MACHTYPE'
+  echo 'unsetenv SHLVL'
+  echo 'unsetenv PWD'
+  echo 'unsetenv LOGNAME'
+  echo 'unsetenv USER'
+  echo 'unsetenv GROUP'
+  echo 'unsetenv HOST'
+  echo 'unsetenv REMOTEHOST'
+  echo 'unsetenv _'
+  echo 'unsetenv LS_COLORS'
+  echo 'unsetenv NOTE'
+  echo 'env'
+  echo 'setenv salut'
+  echo 'env'
+[35-END]
+
+[36]
+NAME="setenv simple 2"
+SETUP="/usr/bin/env > .lstenv ; while read varenv ; do unset $varenv ; done < <(/bin/cat .lstenv | /usr/bin/cut -f1 -d=) ; export PATH=/bin:/usr/bin ; export _=ls ; export LS_COLORS=RID ; export MYBG=4 ; export LVL=4 ; export NOTE=2"
+CLEAN="while read varenv ; do export "$varenv" 2>/dev/null ; done  < <(/bin/cat .lstenv) ; /bin/rm -f .lstenv"
+TESTS=
+echo 'unsetenv HOSTTYPE'
+  echo 'unsetenv VENDOR'
+  echo 'unsetenv OSTYPE'
+  echo 'unsetenv MACHTYPE'
+  echo 'unsetenv SHLVL'
+  echo 'unsetenv PWD'
+  echo 'unsetenv LOGNAME'
+  echo 'unsetenv USER'
+  echo 'unsetenv GROUP'
+  echo 'unsetenv HOST'
+  echo 'unsetenv REMOTEHOST'
+  echo 'unsetenv _'
+  echo 'unsetenv LS_COLORS'
+  echo 'unsetenv NOTE'
+  echo 'env'
+  echo 'setenv salut cava'
+  echo 'env'
+[36-END]
+
+[37]
+NAME="setenv simple 3"
+SETUP="/usr/bin/env > .lstenv ; while read varenv ; do unset $varenv ; done < <(/bin/cat .lstenv | /usr/bin/cut -f1 -d=) ; export PATH=/bin:/usr/bin ; export _=ls ; export LS_COLORS=RID ; export MYBG=4 ; export LVL=4 ; export NOTE=2"
+CLEAN="while read varenv ; do export "$varenv" 2>/dev/null ; done  < <(/bin/cat .lstenv) ; /bin/rm -f .lstenv"
+TESTS=
+  echo 'unsetenv HOSTTYPE'
+  echo 'unsetenv VENDOR'
+  echo 'unsetenv OSTYPE'
+  echo 'unsetenv MACHTYPE'
+  echo 'unsetenv SHLVL'
+  echo 'unsetenv PWD'
+  echo 'unsetenv LOGNAME'
+  echo 'unsetenv USER'
+  echo 'unsetenv GROUP'
+  echo 'unsetenv HOST'
+  echo 'unsetenv REMOTEHOST'
+  echo 'unsetenv _'
+  echo 'unsetenv LS_COLORS'
+  echo 'unsetenv NOTE'
+  echo 'env'
+  echo 'setenv salut cava'
+  echo 'env'
+[37-END]
+
+[38]
+NAME="Testing simple pipe 2"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "env | grep -rn PATH"
+[38-END]
+
+[39]
+NAME="Testing simple pipe 3"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls -la | cat -e"
+[39-END]
+
+[40]
+NAME="Testing simple pipe 4"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls -la | wc -l"
+[40-END]
+
+[41]
+NAME="Testing simple pipe 5"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "cd src | ls"
+[41-END]
+
+[42]
+NAME="Testing multi pipe 1"
+SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
+CLEAN=""
+TESTS=
+  echo "ls -la | grep -rn test | wc -l"
+[42-END]
+
+[43]
+NAME="<"
+SETUP="ls > test"
+CLEAN="rm test"
+TESTS=
+  echo "cat -e < test"
+[43-END]
+
+[44]
+NAME="<"
+SETUP="ls > test"
+CLEAN="rm test"
+TESTS=
+  echo "ls < test"
+[44-END]
+
+[45]
+NAME="<"
+SETUP="ls > test"
+CLEAN="rm test"
+TESTS=
+  echo "wc -l < test"
+[45-END]
+
+[46]
+NAME="<<"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo "sort -n << FIN"
+  echo "13"
+  echo "103"
+  echo "24"
+  echo "19"
+  echo "1"
+  echo "541"
+  echo "FIN"
+[46-END]
